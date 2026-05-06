@@ -1,12 +1,11 @@
 [project]
-name = "ki-quiz-test4"
+name = "ki-quiz-test5"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi",
-    "uvicorn[standard]",
+    "uvicorn",
     "jinja2",
     "python-multipart",
     "httpx",
-    "openai>=1.3.0",
 ]

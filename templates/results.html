@@ -3,133 +3,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KI-Quiz – Ergebnis</title>
+  <title>Lern-Quiz – Ergebnis</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6fb;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     header {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.875rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 2rem;
-      background: #1e293b;
-      border-bottom: 1px solid #334155;
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: #818cf8;
+      color: #1e293b;
     }
 
     .user-id {
       font-size: 0.75rem;
       color: #64748b;
-      background: #0f172a;
+      background: #f1f5f9;
       padding: 0.3rem 0.75rem;
-      border-radius: 9999px;
-      border: 1px solid #334155;
+      border-radius: 999px;
     }
 
     main {
       flex: 1;
-      padding: 2rem;
-      max-width: 760px;
+      padding: 2rem 1rem;
+      max-width: 640px;
       margin: 0 auto;
       width: 100%;
     }
 
     .score-card {
-      background: #1e293b;
-      border: 1px solid #334155;
+      background: #fff;
       border-radius: 1rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
       padding: 2rem;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
-    .score-number {
-      font-size: 4rem;
+    .score-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .score-text {
+      font-size: 2rem;
       font-weight: 800;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-    }
-
-    .score-number.great { color: #4ade80; }
-    .score-number.ok    { color: #facc15; }
-    .score-number.bad   { color: #f87171; }
-
-    .score-label {
-      font-size: 1rem;
-      color: #94a3b8;
+      color: #1e293b;
       margin-bottom: 0.25rem;
     }
 
-    .score-topic {
-      font-size: 0.85rem;
+    .score-label {
       color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
     }
 
-    .progress-bar-wrap {
-      background: #0f172a;
-      border-radius: 9999px;
-      height: 8px;
-      margin: 1.25rem auto 0;
-      max-width: 320px;
+    .score-bar-bg {
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 10px;
       overflow: hidden;
     }
 
-    .progress-bar-fill {
+    .score-bar-fill {
       height: 100%;
-      border-radius: 9999px;
+      border-radius: 999px;
       background: #6366f1;
       transition: width 1s ease;
     }
 
-    .results-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .result-card {
-      background: #1e293b;
-      border-radius: 0.75rem;
+    .result-item {
+      background: #fff;
+      border-radius: 0.875rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
       padding: 1.25rem 1.5rem;
-      border-left: 4px solid #334155;
+      margin-bottom: 1rem;
+      border-left: 4px solid #e2e8f0;
     }
 
-    .result-card.correct   { border-left-color: #4ade80; }
-    .result-card.incorrect { border-left-color: #f87171; }
-    .result-card.skipped   { border-left-color: #64748b; }
-
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
+    .result-item.correct {
+      border-left-color: #22c55e;
     }
+
+    .result-item.wrong {
+      border-left-color: #ef4444;
+    }
+
+    .result-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+
+    .result-item.correct .result-status { color: #16a34a; }
+    .result-item.wrong .result-status { color: #dc2626; }
 
     .result-question {
       font-size: 0.95rem;
-      font-weight: 500;
-      color: #f1f5f9;
-      line-height: 1.5;
-    }
-
-    .result-icon {
-      font-size: 1.2rem;
-      flex-shrink: 0;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.75rem;
+      line-height: 1.45;
     }
 
     .result-options {
@@ -140,98 +131,95 @@
 
     .result-option {
       font-size: 0.875rem;
-      padding: 0.4rem 0.75rem;
+      padding: 0.45rem 0.75rem;
       border-radius: 0.4rem;
-      color: #94a3b8;
-      background: #0f172a;
+      color: #475569;
     }
 
-    .result-option.was-selected.correct-ans {
-      background: #14532d;
-      color: #4ade80;
+    .result-option.is-correct {
+      background: #dcfce7;
+      color: #15803d;
       font-weight: 600;
     }
 
-    .result-option.correct-ans {
-      background: #14532d;
-      color: #4ade80;
+    .result-option.is-wrong {
+      background: #fee2e2;
+      color: #b91c1c;
+      text-decoration: line-through;
     }
 
-    .result-option.was-selected.wrong-ans {
-      background: #450a0a;
-      color: #f87171;
-      font-weight: 600;
+    .option-letter {
+      font-weight: 700;
+      margin-right: 0.4rem;
     }
 
     .actions {
-      margin-top: 2rem;
-      display: flex;
-      justify-content: center;
+      text-align: center;
+      margin-top: 0.5rem;
+      padding-bottom: 2rem;
     }
 
-    a.btn {
-      padding: 0.85rem 2rem;
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
       background: #6366f1;
       color: #fff;
+      border: none;
+      border-radius: 0.6rem;
       font-size: 1rem;
       font-weight: 600;
-      border-radius: 0.5rem;
+      cursor: pointer;
       text-decoration: none;
       transition: background 0.2s;
     }
 
-    a.btn:hover {
+    .btn:hover {
       background: #4f46e5;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>🧠 KI-Quiz</h1>
-    <span class="user-id">{{ user_id or "Gast" }}</span>
+    <h1>Lern-Quiz</h1>
+    <span class="user-id">{{ user_id if user_id else "Gast" }}</span>
   </header>
 
   <main>
-    {% set pct = (score / total * 100) | int %}
     <div class="score-card">
-      <div class="score-number {% if pct >= 70 %}great{% elif pct >= 40 %}ok{% else %}bad{% endif %}">
-        {{ score }}/{{ total }}
+      <div class="score-emoji">
+        {% if score == total %}🏆
+        {% elif score >= total * 0.8 %}🎉
+        {% elif score >= total * 0.6 %}👍
+        {% elif score >= total * 0.4 %}🙂
+        {% else %}📖{% endif %}
       </div>
-      <div class="score-label">
-        {% if pct >= 70 %}Sehr gut! 🎉{% elif pct >= 40 %}Nicht schlecht 👍{% else %}Weiter üben 💪{% endif %}
-      </div>
-      <div class="score-topic">Thema: {{ topic }}</div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" style="width: {{ pct }}%"></div>
+      <div class="score-text">{{ score }} / {{ total }}</div>
+      <div class="score-label">Fragen richtig – Thema: <strong>{{ topic }}</strong></div>
+      <div class="score-bar-bg">
+        <div class="score-bar-fill" style="width: {{ (score / total * 100) | int }}%"></div>
       </div>
     </div>
 
-    <div class="results-list">
-      {% for r in results %}
-      <div class="result-card {% if r.selected == -1 %}skipped{% elif r.is_correct %}correct{% else %}incorrect{% endif %}">
-        <div class="result-header">
-          <span class="result-question">{{ loop.index }}. {{ r.question }}</span>
-          <span class="result-icon">
-            {% if r.selected == -1 %}⬜{% elif r.is_correct %}✅{% else %}❌{% endif %}
-          </span>
+    {% for r in results %}
+    <div class="result-item {{ 'correct' if r.is_correct else 'wrong' }}">
+      <div class="result-status">{{ '✓ Richtig' if r.is_correct else '✗ Falsch' }}</div>
+      <div class="result-question">{{ r.question }}</div>
+      <div class="result-options">
+        {% for option in r.options %}
+        <div class="result-option
+          {% if loop.index0 == r.correct %} is-correct
+          {% elif loop.index0 == r.user_answer and not r.is_correct %} is-wrong
+          {% endif %}">
+          <span class="option-letter">{{ ['A','B','C','D'][loop.index0] }}</span>{{ option }}
+          {% if loop.index0 == r.correct %} ✓{% endif %}
         </div>
-        <div class="result-options">
-          {% for option in r.options %}
-          <div class="result-option
-            {% if loop.index0 == r.correct %}correct-ans{% endif %}
-            {% if loop.index0 == r.selected %}was-selected {% if r.is_correct %}correct-ans{% else %}wrong-ans{% endif %}{% endif %}
-          ">
-            {{ option }}
-            {% if loop.index0 == r.correct and loop.index0 != r.selected %} ✓{% endif %}
-          </div>
-          {% endfor %}
-        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
 
     <div class="actions">
-      <a href="/" class="btn">Neues Quiz starten</a>
+      <a href="/" class="btn">Neues Quiz →</a>
     </div>
   </main>
 </body>

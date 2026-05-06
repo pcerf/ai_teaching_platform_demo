@@ -3,42 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KI-Quiz</title>
+  <title>Lern-Quiz</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6fb;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     header {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.875rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 2rem;
-      background: #1e293b;
-      border-bottom: 1px solid #334155;
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: #818cf8;
-      letter-spacing: -0.02em;
+      color: #1e293b;
     }
 
     .user-id {
       font-size: 0.75rem;
       color: #64748b;
-      background: #0f172a;
+      background: #f1f5f9;
       padding: 0.3rem 0.75rem;
-      border-radius: 9999px;
-      border: 1px solid #334155;
+      border-radius: 999px;
     }
 
     main {
@@ -46,16 +43,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
 
     .card {
-      background: #1e293b;
-      border: 1px solid #334155;
+      background: #fff;
       border-radius: 1rem;
-      padding: 2.5rem;
-      max-width: 520px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      padding: 2.5rem 2rem;
       width: 100%;
+      max-width: 480px;
       text-align: center;
     }
 
@@ -65,54 +62,48 @@
     }
 
     .card h2 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 700;
+      color: #1e293b;
       margin-bottom: 0.5rem;
-      color: #f1f5f9;
     }
 
     .card p {
-      color: #94a3b8;
-      margin-bottom: 2rem;
+      color: #64748b;
+      margin-bottom: 1.75rem;
       line-height: 1.6;
     }
 
-    .form-group {
+    .input-group {
       display: flex;
-      gap: 0.75rem;
-      flex-direction: column;
+      gap: 0.5rem;
     }
 
     input[type="text"] {
-      width: 100%;
-      padding: 0.85rem 1.1rem;
-      background: #0f172a;
-      border: 1px solid #475569;
-      border-radius: 0.5rem;
-      color: #f1f5f9;
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 0.6rem;
       font-size: 1rem;
-      transition: border-color 0.2s;
       outline: none;
+      transition: border-color 0.2s;
+      color: #1e293b;
     }
 
     input[type="text"]:focus {
-      border-color: #818cf8;
-    }
-
-    input[type="text"]::placeholder {
-      color: #475569;
+      border-color: #6366f1;
     }
 
     button[type="submit"] {
-      width: 100%;
-      padding: 0.85rem;
+      padding: 0.75rem 1.25rem;
       background: #6366f1;
       color: #fff;
+      border: none;
+      border-radius: 0.6rem;
       font-size: 1rem;
       font-weight: 600;
-      border: none;
-      border-radius: 0.5rem;
       cursor: pointer;
+      white-space: nowrap;
       transition: background 0.2s;
     }
 
@@ -120,58 +111,77 @@
       background: #4f46e5;
     }
 
-    button[type="submit"]:disabled {
-      background: #475569;
-      cursor: not-allowed;
+    .error {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 0.5rem;
+      color: #b91c1c;
+      font-size: 0.875rem;
+      text-align: left;
     }
 
-    .hint {
-      margin-top: 1rem;
+    .examples {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .example-chip {
       font-size: 0.8rem;
+      background: #f1f5f9;
       color: #475569;
+      border: none;
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .example-chip:hover {
+      background: #e2e8f0;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>🧠 KI-Quiz</h1>
-    <span class="user-id">{{ user_id or "Gast" }}</span>
+    <h1>Lern-Quiz</h1>
+    <span class="user-id">{{ user_id if user_id else "Gast" }}</span>
   </header>
 
   <main>
     <div class="card">
-      <div class="icon">🎯</div>
+      <div class="icon">🧠</div>
       <h2>Thema wählen</h2>
-      <p>Gib ein Thema ein und die KI generiert 10 Multiple-Choice-Fragen für dich.</p>
+      <p>Gib ein Thema ein und die KI erstellt 5 Multiple-Choice-Fragen für dich.</p>
 
-      {% if error %}
-      <div style="background:#450a0a;color:#fca5a5;padding:0.75rem 1rem;border-radius:0.5rem;margin-bottom:1rem;font-size:0.85rem;text-align:left;border:1px solid #7f1d1d;">
-        ⚠️ {{ error }}
-      </div>
-      {% endif %}
-
-      <form method="post" action="/generate" onsubmit="handleSubmit(this)">
-        <div class="form-group">
-          <input
-            type="text"
-            name="topic"
-            placeholder="z. B. Photosynthese, Zweiter Weltkrieg, Python …"
-            required
-            autofocus
-          />
-          <button type="submit" id="submit-btn">Quiz starten</button>
+      <form method="post" action="/generate">
+        <div class="input-group">
+          <input type="text" name="topic" id="topic" placeholder="z. B. Photosynthese" required autofocus />
+          <button type="submit">Start →</button>
         </div>
       </form>
 
-      <p class="hint">Die Fragen werden von der KI generiert – das dauert einen Moment.</p>
+      {% if error %}
+      <div class="error">{{ error }}</div>
+      {% endif %}
+
+      <div class="examples">
+        <button class="example-chip" onclick="setTopic('Photosynthese')">Photosynthese</button>
+        <button class="example-chip" onclick="setTopic('Zweiter Weltkrieg')">2. Weltkrieg</button>
+        <button class="example-chip" onclick="setTopic('Python-Programmierung')">Python</button>
+        <button class="example-chip" onclick="setTopic('Astronomie')">Astronomie</button>
+        <button class="example-chip" onclick="setTopic('Menschliche Anatomie')">Anatomie</button>
+      </div>
     </div>
   </main>
 
   <script>
-    function handleSubmit(form) {
-      const btn = document.getElementById('submit-btn');
-      btn.textContent = 'Fragen werden generiert …';
-      btn.disabled = true;
+    function setTopic(value) {
+      document.getElementById('topic').value = value;
     }
   </script>
 </body>
