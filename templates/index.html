@@ -144,6 +144,12 @@
       <h2>Thema wählen</h2>
       <p>Gib ein Thema ein und die KI generiert 10 Multiple-Choice-Fragen für dich.</p>
 
+      {% if error %}
+      <div style="background:#450a0a;color:#fca5a5;padding:0.75rem 1rem;border-radius:0.5rem;margin-bottom:1rem;font-size:0.85rem;text-align:left;border:1px solid #7f1d1d;">
+        ⚠️ {{ error }}
+      </div>
+      {% endif %}
+
       <form method="post" action="/generate" onsubmit="handleSubmit(this)">
         <div class="form-group">
           <input
