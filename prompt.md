@@ -1,6 +1,13 @@
 # Prompt für KI-Agent
 
-Erstelle eine vollständige Python-Webanwendung basierend auf den folgenden Anforderungen. Die Anwendung soll **mc_test** heißen.
+Erstelle eine vollständige Python-Webanwendung basierend auf den folgenden Anforderungen. Die Anwendung soll **AI Multiple Choice** heißen.
+
+---
+
+## 0. Einstellungen
+
+- **Name unter der die App erreichbar ist (ohne Leerzeiche und Sonderzeichen):**
+  SERVICE_NAME: ki-quiz-test2
 
 ---
 
@@ -87,10 +94,11 @@ EXPOSE 5000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
  ```
  
- ### C) Deployment (docker-compose.yml)
- - Verwende dieses Template und setze den Service-Namen auf ki-quiz-test1.
- Die Subdomain soll ki-quiz-test1.hub.lumentic.de lauten.
- - Überall wo APP_NAME steht kannst du ki-quiz-test1 einsetzen
+ ### C) Deployment (docker-compose.yaml)
+ - Unter 0. ganz oben wurde die Variable SERVICE_NAME definiert
+ - Verwende dieses Template und setze den Service-Namen auf SERVICE_NAME
+ - Die Subdomain soll SERVICE_NAME.hub.lumentic.de lauten.
+ - Überall wo APP_NAME steht kannst du den Inhalt der Variablen SERVICE_NAME einsetzen
  - Du musst keine weiteren Environments setzen, sie werden automatisch gesetzt.
  - Die Docker-Compose muss auf .yaml enden. Das ist sehr wichtig.
  - Überprüfe, ob alles richtig ist.
