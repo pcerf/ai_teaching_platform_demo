@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>allgemein_mc - Multiple Choice Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        #user-id {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .question-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .option label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .quiz-header {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .results-container {
+            margin-top: 20px;
+        }
+        
+        .score-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .score-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .result-item.correct {
+            border-left-color: #28a745;
+        }
+        
+        .result-item.incorrect {
+            border-left-color: #dc3545;
+        }
+        
+        .result-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .result-answer {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .correct-answer {
+            color: #28a745;
+        }
+        
+        .incorrect-answer {
+            color: #dc3545;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .button-group button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-id">User ID: <strong>{{ user_id }}</strong></div>
+    
+    <div class="container">
+        {% if page == "home" %}
+            <h1>🎓 allgemein_mc</h1>
+            <p class="subtitle">Multiple Choice Quiz Generator</p>
+            
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+            
+            <form method="post" action="/quiz">
+                <div class="form-group">
+                    <label for="topic">Enter a topic for your quiz:</label>
+                    <input type="text" id="topic" name="topic" placeholder="e.g., Python Programming, World History, Biology..." required>
+                </div>
+                <button type="submit">Generate Quiz (10 Questions)</button>
+            </form>
+        
+        {% elif page == "quiz" %}
+            <h1>🎓 Quiz: {{ topic }}</h1>
+            <p class="subtitle">Answer all 10 questions and submit for results</p>
+            
+            <div class="quiz-header">
+                📝 {{ questions|length }} Questions
+            </div>
+            
+            <form method="post" action="/results" id="quiz-form">
+                <input type="hidden" id="answers-input" name="answers">
+                
+                {% for question in questions %}
+                    <div class="question-item">
+                        <div class="question-text">{{ loop.index }}. {{ question.question }}</div>
+                        <div class="options">
+                            {% for option in question.options %}
+                                <div class="option">
+                                    <input type="radio" name="q{{ question.id }}" value="{{ ['a', 'b', 'c', 'd'][loop.index0] }}" required>
+                                    <label>{{ option }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <button type="submit">Submit Answers</button>
+            </form>
+            
+            <script>
+                document.getElementById('quiz-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const answers = {};
+                    const questions = {{ questions_json|safe }};
+                    
+                    questions.forEach(q => {
+                        const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                        if (selected) {
+                            answers[q.id] = selected.value;
+                        }
+                    });
+                    
+                    document.getElementById('answers-input').value = JSON.stringify({
+                        topic: '{{ topic }}',
+                        questions: questions,
+                        answers: answers
+                    });
+                    
+                    this.submit();
+                });
+            </script>
+        
+        {% elif page == "results" %}
+            <h1>📊 Results: {{ topic }}</h1>
+            <p class="subtitle">Quiz Complete</p>
+            
+            <div class="score-summary">
+                <div class="score">{{ correct_count }}/{{ total_questions }}</div>
+                <div class="score-text">{{ "%.0f"|format(percentage) }}% Correct</div>
+            </div>
+            
+            <div class="results-container">
+                {% for result in results %}
+                    <div class="result-item {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+                        <div class="result-question">{{ loop.index }}. {{ result.question }}</div>
+                        <div class="result-answer">
+                            Your answer: <strong>{{ result.user_answer|upper }}</strong>
+                            {% if result.is_correct %}
+                                <span class="correct-answer">✓ Correct</span>
+                            {% else %}
+                                <span class="incorrect-answer">✗ Incorrect</span>
+                            {% endif %}
+                        </div>
+                        {% if not result.is_correct %}
+                            <div class="result-answer">
+                                Correct answer: <span class="correct-answer"><strong>{{ result.correct_answer|upper }}</strong></span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="button-group">
+                <form method="get" action="/" style="flex: 1;">
+                    <button type="submit" style="width: 100%;">Try Another Topic</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
