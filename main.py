@@ -74,7 +74,7 @@ def safe_user_id(request: Request) -> str:
 async def index(request: Request):
     user_id = safe_user_id(request)
     return templates.TemplateResponse(
-        "index.html", {"request": request, "user_id": user_id, "error": None}
+        request, "index.html", {"user_id": user_id, "error": None}
     )
 
 
@@ -86,18 +86,18 @@ async def generate(request: Request, topic: str = Form(...)):
     except Exception as e:
         traceback.print_exc(file=sys.stderr)
         return templates.TemplateResponse(
+            request,
             "index.html",
             {
-                "request": request,
                 "user_id": user_id,
                 "error": f"Fehler beim Generieren der Fragen: {e}",
             },
         )
 
     return templates.TemplateResponse(
+        request,
         "quiz.html",
         {
-            "request": request,
             "user_id": user_id,
             "topic": topic,
             "questions": questions,
@@ -115,8 +115,9 @@ async def submit(request: Request):
     except Exception as e:
         traceback.print_exc(file=sys.stderr)
         return templates.TemplateResponse(
+            request,
             "index.html",
-            {"request": request, "user_id": user_id, "error": f"Auswertung fehlgeschlagen: {e}"},
+            {"user_id": user_id, "error": f"Auswertung fehlgeschlagen: {e}"},
         )
 
     topic = form.get("topic", "")
@@ -139,9 +140,9 @@ async def submit(request: Request):
         )
 
     return templates.TemplateResponse(
+        request,
         "results.html",
         {
-            "request": request,
             "user_id": user_id,
             "topic": topic,
             "results": results,
