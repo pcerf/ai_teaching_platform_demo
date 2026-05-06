@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KI-Quiz – {{ topic }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #818cf8;
+    }
+
+    .user-id {
+      font-size: 0.75rem;
+      color: #64748b;
+      background: #0f172a;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid #334155;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 760px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .topic-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .topic-bar h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      background: #312e81;
+      color: #a5b4fc;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      border: 1px solid #4338ca;
+    }
+
+    .question-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .question-number {
+      font-size: 0.75rem;
+      color: #818cf8;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .option-label:hover {
+      border-color: #6366f1;
+      background: #1e1b4b;
+    }
+
+    input[type="radio"] {
+      accent-color: #6366f1;
+      width: 1.1rem;
+      height: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    input[type="radio"]:checked + .option-text {
+      color: #a5b4fc;
+      font-weight: 500;
+    }
+
+    .option-label:has(input:checked) {
+      border-color: #6366f1;
+      background: #1e1b4b;
+    }
+
+    .option-text {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+
+    .submit-bar {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    button[type="submit"] {
+      padding: 0.9rem 2.5rem;
+      background: #6366f1;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      background: #4f46e5;
+    }
+
+    button[type="submit"]:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧠 KI-Quiz</h1>
+    <span class="user-id">{{ user_id or "Gast" }}</span>
+  </header>
+
+  <main>
+    <div class="topic-bar">
+      <h2>{{ topic }}</h2>
+      <span class="badge">10 Fragen</span>
+    </div>
+
+    <form method="post" action="/submit" onsubmit="handleSubmit(this)">
+      <input type="hidden" name="questions_json" value="{{ questions_json | e }}" />
+      <input type="hidden" name="topic" value="{{ topic | e }}" />
+
+      {% for q in questions %}
+      <div class="question-card">
+        <div class="question-number">Frage {{ loop.index }} von {{ questions | length }}</div>
+        <div class="question-text">{{ q.question }}</div>
+        <div class="options">
+          {% for option in q.options %}
+          <label class="option-label">
+            <input type="radio" name="answer_{{ loop.index0 if loop.depth == 1 else loop.revindex }}" value="{{ loop.index0 }}" />
+            <span class="option-text">{{ option }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="submit-bar">
+        <button type="submit" id="submit-btn">Auswertung anzeigen →</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Fix radio names using outer loop index
+    document.querySelectorAll('.question-card').forEach((card, qi) => {
+      card.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.name = `answer_${qi}`;
+      });
+    });
+
+    function handleSubmit(form) {
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Wird ausgewertet …';
+      btn.disabled = true;
+    }
+  </script>
+</body>
+</html>

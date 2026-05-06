@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KI-Quiz</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #818cf8;
+      letter-spacing: -0.02em;
+    }
+
+    .user-id {
+      font-size: 0.75rem;
+      color: #64748b;
+      background: #0f172a;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid #334155;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .card .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #f1f5f9;
+    }
+
+    .card p {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-direction: column;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.85rem 1.1rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 0.5rem;
+      color: #f1f5f9;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #818cf8;
+    }
+
+    input[type="text"]::placeholder {
+      color: #475569;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.85rem;
+      background: #6366f1;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      background: #4f46e5;
+    }
+
+    button[type="submit"]:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
+
+    .hint {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧠 KI-Quiz</h1>
+    <span class="user-id">{{ user_id or "Gast" }}</span>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="icon">🎯</div>
+      <h2>Thema wählen</h2>
+      <p>Gib ein Thema ein und die KI generiert 10 Multiple-Choice-Fragen für dich.</p>
+
+      <form method="post" action="/generate" onsubmit="handleSubmit(this)">
+        <div class="form-group">
+          <input
+            type="text"
+            name="topic"
+            placeholder="z. B. Photosynthese, Zweiter Weltkrieg, Python …"
+            required
+            autofocus
+          />
+          <button type="submit" id="submit-btn">Quiz starten</button>
+        </div>
+      </form>
+
+      <p class="hint">Die Fragen werden von der KI generiert – das dauert einen Moment.</p>
+    </div>
+  </main>
+
+  <script>
+    function handleSubmit(form) {
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Fragen werden generiert …';
+      btn.disabled = true;
+    }
+  </script>
+</body>
+</html>
