@@ -148,7 +148,7 @@ networks:
 |---|---|
 | `APP_ID` | App identifier |
 | `APP_TOKEN` | App authentication token |
-| `AI_SERVICE_URL` | Proxy base URL |
+| `AI_SERVICE_URL` | Full endpoint URL including path, e.g. `http://ai-service:5000/v1/chat/completions` — use directly, do NOT append `/v1/chat/completions` again |
 | `AI_API_KEY` | API key forwarded to provider |
 | `AI_BASE_URL` | Provider base URL forwarded via header |
 | `AI_MODEL` | Model name (e.g. `gpt-4o`) |
@@ -184,7 +184,7 @@ async def get_ai_response(prompt: str):
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{ai_url}/v1/chat/completions",
+            ai_url,  # AI_SERVICE_URL already contains the full path
             json=payload,
             headers=headers,
             timeout=30.0
