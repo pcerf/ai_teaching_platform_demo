@@ -3,39 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lern-Quiz</title>
+  <title>Trainer</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f4f6fb;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     header {
-      background: #fff;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 0.875rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1rem 2rem;
     }
 
     header h1 {
-      font-size: 1.25rem;
+      color: #fff;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #1e293b;
+      letter-spacing: 0.05em;
     }
 
     .user-id {
-      font-size: 0.75rem;
-      color: #64748b;
-      background: #f1f5f9;
+      background: rgba(255,255,255,0.15);
+      color: #e0e7ff;
+      font-size: 0.8rem;
       padding: 0.3rem 0.75rem;
       border-radius: 999px;
+      backdrop-filter: blur(4px);
     }
 
     main {
@@ -43,146 +43,108 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem 1rem;
+      padding: 2rem;
     }
 
     .card {
       background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-      padding: 2.5rem 2rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 3rem 2.5rem;
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
       text-align: center;
     }
 
-    .card .icon {
+    .card-icon {
       font-size: 3rem;
       margin-bottom: 1rem;
     }
 
     .card h2 {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
-      color: #1e293b;
+      color: #1e1b4b;
       margin-bottom: 0.5rem;
     }
 
     .card p {
-      color: #64748b;
-      margin-bottom: 1.75rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
       line-height: 1.6;
     }
 
     .input-group {
       display: flex;
-      gap: 0.5rem;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
     input[type="text"] {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 0.6rem;
+      width: 100%;
+      padding: 0.85rem 1.1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
       font-size: 1rem;
+      color: #111827;
       outline: none;
       transition: border-color 0.2s;
-      color: #1e293b;
     }
 
     input[type="text"]:focus {
-      border-color: #6366f1;
+      border-color: #4338ca;
     }
 
     button[type="submit"] {
-      padding: 0.75rem 1.25rem;
-      background: #6366f1;
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
       color: #fff;
-      border: none;
-      border-radius: 0.6rem;
       font-size: 1rem;
       font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-
-    button[type="submit"]:hover {
-      background: #4f46e5;
-    }
-
-    .error {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 0.5rem;
-      color: #b91c1c;
-      font-size: 0.875rem;
-      text-align: left;
-    }
-
-    .examples {
-      margin-top: 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-    }
-
-    .example-chip {
-      font-size: 0.8rem;
-      background: #f1f5f9;
-      color: #475569;
       border: none;
-      border-radius: 999px;
-      padding: 0.3rem 0.85rem;
+      border-radius: 0.75rem;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: opacity 0.2s, transform 0.1s;
     }
 
-    .example-chip:hover {
-      background: #e2e8f0;
+    button[type="submit"]:hover { opacity: 0.9; }
+    button[type="submit"]:active { transform: scale(0.98); }
+
+    .hint {
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: #9ca3af;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Lern-Quiz</h1>
-    <span class="user-id">{{ user_id if user_id else "Gast" }}</span>
+    <h1>Trainer</h1>
+    {% if user_id %}
+    <span class="user-id">{{ user_id }}</span>
+    {% endif %}
   </header>
 
   <main>
     <div class="card">
-      <div class="icon">🧠</div>
-      <h2>Thema wählen</h2>
-      <p>Gib ein Thema ein und die KI erstellt 5 Multiple-Choice-Fragen für dich.</p>
-
-      <form method="post" action="/generate">
+      <div class="card-icon">🎓</div>
+      <h2>Quiz starten</h2>
+      <p>Gib ein Thema ein und die KI erstellt&nbsp;5 Multiple-Choice-Fragen für dich.</p>
+      <form action="/generate" method="post">
         <div class="input-group">
-          <input type="text" name="topic" id="topic" placeholder="z. B. Photosynthese" required autofocus />
-          <button type="submit">Start →</button>
+          <input
+            type="text"
+            name="topic"
+            placeholder="z. B. Photosynthese, Python, Zweiter Weltkrieg …"
+            required
+            autofocus
+          />
+          <button type="submit">Quiz generieren &rarr;</button>
         </div>
       </form>
-
-      {% if error %}
-      <div class="error">{{ error }}</div>
-      {% endif %}
-
-      <div class="examples">
-        <button class="example-chip" onclick="setTopic('Photosynthese')">Photosynthese</button>
-        <button class="example-chip" onclick="setTopic('Zweiter Weltkrieg')">2. Weltkrieg</button>
-        <button class="example-chip" onclick="setTopic('Python-Programmierung')">Python</button>
-        <button class="example-chip" onclick="setTopic('Astronomie')">Astronomie</button>
-        <button class="example-chip" onclick="setTopic('Menschliche Anatomie')">Anatomie</button>
-      </div>
+      <p class="hint">Die Fragen werden von einer KI generiert und können Fehler enthalten.</p>
     </div>
   </main>
-
-  <script>
-    function setTopic(value) {
-      document.getElementById('topic').value = value;
-    }
-  </script>
 </body>
 </html>

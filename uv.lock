@@ -136,7 +136,7 @@ wheels = [
 ]
 
 [[package]]
-name = "ki-quiz-test5"
+name = "ki-quiz-test6"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
@@ -149,11 +149,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "fastapi" },
-    { name = "httpx" },
-    { name = "jinja2" },
-    { name = "python-multipart" },
-    { name = "uvicorn" },
+    { name = "fastapi", specifier = ">=0.115.0" },
+    { name = "httpx", specifier = ">=0.27.0" },
+    { name = "jinja2", specifier = ">=3.1.0" },
+    { name = "python-multipart", specifier = ">=0.0.12" },
+    { name = "uvicorn", specifier = ">=0.32.0" },
 ]
 
 [[package]]

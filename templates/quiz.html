@@ -3,100 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lern-Quiz – {{ topic }}</title>
+  <title>Trainer – Quiz</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f4f6fb;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     header {
-      background: #fff;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 0.875rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1rem 2rem;
     }
 
     header h1 {
-      font-size: 1.25rem;
+      color: #fff;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #1e293b;
+      letter-spacing: 0.05em;
     }
 
     .user-id {
-      font-size: 0.75rem;
-      color: #64748b;
-      background: #f1f5f9;
+      background: rgba(255,255,255,0.15);
+      color: #e0e7ff;
+      font-size: 0.8rem;
       padding: 0.3rem 0.75rem;
       border-radius: 999px;
+      backdrop-filter: blur(4px);
     }
 
     main {
       flex: 1;
-      padding: 2rem 1rem;
-      max-width: 640px;
-      margin: 0 auto;
-      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      gap: 1.25rem;
     }
 
     .topic-badge {
-      display: inline-block;
-      background: #ede9fe;
-      color: #6d28d9;
-      font-size: 0.8rem;
+      background: rgba(255,255,255,0.15);
+      color: #e0e7ff;
+      font-size: 0.9rem;
       font-weight: 600;
-      padding: 0.3rem 0.85rem;
+      padding: 0.4rem 1rem;
       border-radius: 999px;
-      margin-bottom: 1.25rem;
+      backdrop-filter: blur(4px);
     }
 
-    .progress {
-      display: flex;
-      gap: 0.35rem;
-      margin-bottom: 1.75rem;
-    }
-
-    .progress-dot {
-      flex: 1;
-      height: 5px;
-      background: #e2e8f0;
-      border-radius: 999px;
-    }
-
-    .progress-dot.active {
-      background: #6366f1;
-    }
-
-    .question-card {
+    .card {
       background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-      padding: 1.75rem;
-      margin-bottom: 1.25rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      padding: 1.75rem 2rem;
+      width: 100%;
+      max-width: 640px;
     }
 
-    .question-number {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #6366f1;
+    .question-num {
+      font-size: 0.78rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      color: #6d28d9;
       margin-bottom: 0.5rem;
     }
 
     .question-text {
       font-size: 1.05rem;
       font-weight: 600;
-      color: #1e293b;
+      color: #1e1b4b;
+      margin-bottom: 1.1rem;
       line-height: 1.5;
-      margin-bottom: 1.25rem;
     }
 
     .options {
@@ -105,118 +89,82 @@
       gap: 0.6rem;
     }
 
-    .option-label {
+    .option label {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 0.6rem;
+      padding: 0.7rem 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.65rem;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      color: #334155;
       font-size: 0.95rem;
+      color: #374151;
+      transition: border-color 0.15s, background 0.15s;
     }
 
-    .option-label:hover {
-      border-color: #a5b4fc;
-      background: #f5f3ff;
-    }
+    .option input[type="radio"] { accent-color: #4338ca; flex-shrink: 0; }
+    .option label:hover { border-color: #a5b4fc; background: #f5f3ff; }
+    .option:has(input:checked) label { border-color: #4338ca; background: #eef2ff; font-weight: 600; color: #1e1b4b; }
 
-    input[type="radio"] {
-      accent-color: #6366f1;
-      width: 1.1rem;
-      height: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    input[type="radio"]:checked + .option-label,
-    .option-label:has(input[type="radio"]:checked) {
-      border-color: #6366f1;
-      background: #f5f3ff;
-    }
-
-    .option-letter {
-      font-weight: 700;
-      color: #6366f1;
-      min-width: 1.2rem;
-    }
-
-    .submit-row {
-      text-align: center;
-      margin-top: 0.5rem;
+    .submit-area {
+      width: 100%;
+      max-width: 640px;
     }
 
     button[type="submit"] {
-      padding: 0.875rem 2.5rem;
-      background: #6366f1;
+      width: 100%;
+      padding: 0.95rem;
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
       color: #fff;
-      border: none;
-      border-radius: 0.6rem;
       font-size: 1rem;
       font-weight: 600;
+      border: none;
+      border-radius: 0.75rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: opacity 0.2s, transform 0.1s;
     }
 
-    button[type="submit"]:hover {
-      background: #4f46e5;
-    }
+    button[type="submit"]:hover { opacity: 0.9; }
+    button[type="submit"]:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
   <header>
-    <h1>Lern-Quiz</h1>
-    <span class="user-id">{{ user_id if user_id else "Gast" }}</span>
+    <h1>Trainer</h1>
+    {% if user_id %}
+    <span class="user-id">{{ user_id }}</span>
+    {% endif %}
   </header>
 
   <main>
-    <div class="topic-badge">📚 {{ topic }}</div>
+    <div class="topic-badge">Thema: {{ topic }}</div>
 
-    <div class="progress" id="progress">
-      {% for q in questions %}
-      <div class="progress-dot" id="dot-{{ loop.index0 }}"></div>
-      {% endfor %}
-    </div>
-
-    <form method="post" action="/results" id="quiz-form">
-      <input type="hidden" name="topic" value="{{ topic }}" />
+    <form action="/results" method="post" style="display:contents">
       <input type="hidden" name="questions_json" value="{{ questions_json | e }}" />
+      <input type="hidden" name="topic" value="{{ topic | e }}" />
 
       {% for q in questions %}
-      <div class="question-card">
-        <div class="question-number">Frage {{ loop.index }} von {{ questions | length }}</div>
+      {% set qi = loop.index0 %}
+      <div class="card">
+        <div class="question-num">Frage {{ loop.index }} von {{ questions | length }}</div>
         <div class="question-text">{{ q.question }}</div>
         <div class="options">
           {% for option in q.options %}
-          <label class="option-label">
-            <input type="radio" name="answer_{{ loop.index0 }}" value="{{ loop.index0 }}"
-              onchange="markDot({{ loop.index0 - 1 + (loop.index0 - loop.index0) }})" />
-            <span class="option-letter">{{ ['A','B','C','D'][loop.index0] }}</span>
-            {{ option }}
-          </label>
+          <div class="option">
+            <label>
+              <input type="radio" name="answer_{{ qi }}" value="{{ loop.index0 }}" required />
+              <span>{{ option }}</span>
+            </label>
+          </div>
           {% endfor %}
         </div>
       </div>
       {% endfor %}
 
-      <div class="submit-row">
-        <button type="submit">Auswerten →</button>
+      <div class="submit-area">
+        <button type="submit">Auswerten &rarr;</button>
       </div>
     </form>
   </main>
-
-  <script>
-    const letters = ['A','B','C','D'];
-
-    // Fix: attach onchange to radio inputs properly
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        const name = radio.getAttribute('name');
-        const qIndex = parseInt(name.replace('answer_', ''));
-        document.getElementById('dot-' + qIndex).classList.add('active');
-      });
-    });
-  </script>
 </body>
 </html>
