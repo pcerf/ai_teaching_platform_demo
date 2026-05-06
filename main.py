@@ -45,7 +45,7 @@ async def generate_questions(topic: str) -> list[dict]:
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{ai_url}/v1/chat/completions",
+            ai_url,
             json=payload,
             headers=headers,
             timeout=30.0,
