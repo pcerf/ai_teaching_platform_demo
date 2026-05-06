@@ -7,12 +7,17 @@ services:
     environment:
       - APP_ID=${APP_ID}
       - APP_TOKEN=${APP_TOKEN}
+      - AI_SERVICE_URL=${AI_SERVICE_URL}
+      - AI_BASE_URL=${AI_BASE_URL}
+      - AI_API_KEY=${AI_API_KEY}
+      - AI_MODEL=${AI_MODEL}
+      - AUTH_UPSTREAM=${AUTH_UPSTREAM}
     networks:
       - coolify
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=coolify"
-      - "traefik.http.routers.ki-quiz-test3-test.rule=Host(`ki-quiz-test3.hub.lumentic.de`)"
+      - "traefik.http.routers.ki-quiz-test3.rule=Host(`ki-quiz-test3.hub.lumentic.de`)"
       - "traefik.http.routers.ki-quiz-test3.tls.certresolver=letsencrypt"
       - "traefik.http.routers.ki-quiz-test3.entrypoints=https"
       - "traefik.http.routers.ki-quiz-test3.middlewares=forward-auth@file"
