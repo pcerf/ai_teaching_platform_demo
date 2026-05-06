@@ -1,5 +1,5 @@
 [project]
-name = "ki-quiz-test3"
+name = "ki-quiz-test4"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [

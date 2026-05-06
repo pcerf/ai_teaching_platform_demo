@@ -72,9 +72,10 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
 
 ## docker-compose.yaml Template
 
-- `SERVICE_NAME` is defined by the use in the current chat session — substitute it everywhere `APP_NAME` appears.
+- `SERVICE_NAME` is defined by the user in the current chat session — substitute it everywhere `APP_NAME` appears (including the `SUBDOMAIN` placeholder).
 - Subdomain: `SERVICE_NAME.hub.lumentic.de`
-- Do **not** add extra environment variables; they are injected automatically.
+- All router labels MUST use the same router name (`APP_NAME`). Do not add suffixes like `-test` to any of them — Traefik would otherwise create multiple half-configured routers and the app becomes unreachable.
+- AI proxy environment variables (`AI_SERVICE_URL`, `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AUTH_UPSTREAM`) must be declared explicitly so the container actually receives them — Coolify only injects them into the host environment, not into the container.
 - Use .yaml as a file ending and not .yml, this is really important.
 
 ```yaml
@@ -87,16 +88,21 @@ services:
     environment:
       - APP_ID=${APP_ID}
       - APP_TOKEN=${APP_TOKEN}
+      - AI_SERVICE_URL=${AI_SERVICE_URL}
+      - AI_BASE_URL=${AI_BASE_URL}
+      - AI_API_KEY=${AI_API_KEY}
+      - AI_MODEL=${AI_MODEL}
+      - AUTH_UPSTREAM=${AUTH_UPSTREAM}
     networks:
       - coolify
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=coolify"
-      - "traefik.http.routers.APP_NAME-test.rule=Host(`SUBDOMAIN.hub.lumentic.de`)"
+      - "traefik.http.routers.APP_NAME.rule=Host(`APP_NAME.hub.lumentic.de`)"
       - "traefik.http.routers.APP_NAME.tls.certresolver=letsencrypt"
       - "traefik.http.routers.APP_NAME.entrypoints=https"
       - "traefik.http.routers.APP_NAME.middlewares=forward-auth@file"
-      - "traefik.http.routers.APP_NAME.service=ki-quiz-test"
+      - "traefik.http.routers.APP_NAME.service=APP_NAME"
       - "traefik.http.services.APP_NAME.loadbalancer.server.port=5000"
 
 networks:
@@ -117,7 +123,7 @@ networks:
 | `AI_BASE_URL` | Provider base URL forwarded via header |
 | `AI_MODEL` | Model name (e.g. `gpt-4o`) |
 | `AUTH_UPSTREAM` | Upstream auth service |
-| `AI_PROVIDE` | AI provider identifier |
+| `AI_PROVIDER` | AI provider identifier |
 
 ### httpx (direct)
 
