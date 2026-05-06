@@ -39,3 +39,17 @@ Sobald alle Dateien vollständig erstellt sind:
 
 1. Erstelle einen aussagekräftigen Git-Commit auf dem Branch `main` im aktuellen Verzeichnis.
 2. Pushe den Commit auf `origin`.
+
+## Schritt 6 – Deployment-Anleitung
+
+Erkläre dem Nutzer abschließend, wie er die App deployed:
+
+1. Öffne **https://login.hub.lumentic.de** und klicke auf **„App Anfragen"**.
+2. Fülle das Formular aus:
+   - **App-Name:** `SERVICE_NAME`
+   - **Subdomain:** `SERVICE_NAME`
+   - **Git Repository URL:** die URL des Repositories
+   - **Git Branch:** `main`
+   - **Build Pack:** `Dockercompose`
+   - **KI-Konfiguration:** gewünschtes Modell und API-Key eintragen
+3. Formular absenden – Coolify übernimmt den Rest.
