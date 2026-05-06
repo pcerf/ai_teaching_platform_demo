@@ -18,6 +18,36 @@ FastAPI app with Jinja2 HTML templates, deployed via Docker on the lumentic.de h
 - `Dockerfile`
 - `docker-compose.yaml` (must end in `.yaml`, not `.yml`)
 
+## Templates — Jinja2
+
+Two equivalent options. Pick one and use it consistently:
+
+**Option A — raw Jinja2 (recommended, version-stable):**
+
+```python
+from jinja2 import Environment, FileSystemLoader
+template_env = Environment(loader=FileSystemLoader("templates"))
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return template_env.get_template("index.html").render(user_id="...")
+```
+
+**Option B — FastAPI's `Jinja2Templates`:**
+
+If you use this, you MUST use the new signature `TemplateResponse(request, name, context)`. The old positional form `TemplateResponse(name, context)` is **broken** in Starlette ≥ 0.29 — the dict is interpreted as the template name, causing `TypeError: unhashable type: 'dict'` inside the template cache.
+
+```python
+from fastapi.templating import Jinja2Templates
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse(request, "index.html", {"user_id": "..."})
+```
+
+Do not put `"request": request` inside the context dict — pass `request` as the first positional argument.
+
 ## Auth (`auth.py`) — use exactly as written
 
 ```python
